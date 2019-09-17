@@ -22,7 +22,7 @@ class App extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     axios
-      .post('http://localhost:5000/api/users/register', this.state.credentials)
+      .post('http://localhost:5000/api/auth/login', this.state.credentials)
       .then(res => {
         console.log(res)
       })
