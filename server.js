@@ -19,15 +19,20 @@ const sessionConfig = {
         httpOnly: true,
     },
     resave: false,
-    saveUninitialized: false, // GDPR laws against setting cookies automatically
+    saveUninitialized: true, // GDPR laws against setting cookies automatically
     store: new KnexSessionStore({
         knex: knexConnection,
         createtable: true,
-        clearInterval: 1000 * 60 * 30, // How long before expired sessions delete: 30 mins
+        clearInterval: 1000 * 600, // How long before expired sessions delete: 30 mins
     })
 }
 
-server.use(cors());
+const corsConfig = {
+    origin: 'http://localhost:3000',
+    credentials: true,
+};
+
+server.use(cors(corsConfig));
 server.use(helmet());
 server.use(express.json());
 server.use(session(sessionConfig));
