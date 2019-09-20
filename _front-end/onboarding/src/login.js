@@ -3,28 +3,31 @@ import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui
 import axios from 'axios'
 
 const LoginForm = () => {
-    const [state, setState] = useState({ credentials: { username: '', password: '' } })
+    const [user, setUser] = useState({ username: '', password: '' })
 
-    const handleSubmit = (e) => {
-        console.log(state)
-        e.preventDefault();
+
+    const apiCall = () => {
         axios
-            .post('http://localhost:5000/api/auth/login', state.credentials, { withCredentials: true })
+            .post('http://localhost:5000/api/auth/login', user, { withCredentials: true })
             .then(res => {
                 console.log(res)
             })
             .catch(err => console.log(err.response));
     }
 
-    const handleChange = (e) => {
-        setState({
-            credentials: {
-                ...state.credentials,
-                [e.target.name]: e.target.value
-            }
-        });
-        console.log(state)
+    const handleSubmit = () => {
+        apiCall()
+        setUser({ username: '', password: '' })
+        console.log('Does the state Change', user)
     }
+
+    const handleChange = (e, { name, value }) => {
+        const { username, password } = user
+        setUser({ ...user, [name]: value });
+        console.log('Username:', username, 'Password:', password)
+    }
+
+    const { username, password } = user
 
     return (
         <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
@@ -34,7 +37,7 @@ const LoginForm = () => {
       </Header>
                 <Form size='large' onSubmit={handleSubmit}>
                     <Segment stacked>
-                        <Form.Input fluid icon='user' iconPosition='left' placeholder='Username' name="username" onChange={handleChange} />
+                        <Form.Input fluid icon='user' iconPosition='left' placeholder='Username' name="username" value={username} onChange={handleChange} />
                         <Form.Input
                             fluid
                             icon='lock'
@@ -42,6 +45,7 @@ const LoginForm = () => {
                             placeholder='Password'
                             type='password'
                             name="password"
+                            value={password}
                             onChange={handleChange}
                         />
 
